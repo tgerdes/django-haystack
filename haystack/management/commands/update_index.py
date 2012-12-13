@@ -28,7 +28,10 @@ def worker(bits):
         # out connections (via ``... = {}``) destroys in-memory DBs.
         if not 'sqlite3' in info['ENGINE']:
             try:
-                del(connections._connections[alias])
+                if isinstance(connections._connections, dict):
+                    del(connections._connections[alias])
+                else:
+                    delattr(connections._connections, alias)
             except KeyError:
                 pass
     
